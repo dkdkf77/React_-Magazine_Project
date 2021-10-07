@@ -11,12 +11,12 @@ const Post = (props) => {
   //Image 컴포넌트와 Text 컴포넌트를 만든다
   return (
     // 디브 안의 값들이 Grid.js 의 children 값으로 넘어간다.
-    // 
+    // props 에서 받아 오는 것은 props. 로 가져 온다 .
     <React.Fragment>
       <Grid>
         <Grid is_flex>
           <Image shape = "circle" src = {props.src}/>
-          <Text bold>{props.user_info.user_name}</Text>
+          <Text bold>{props.user_info.user_name}</Text> 
           <Text>{props.insert_dt}</Text>
         </Grid>
         <Grid padding = "16px">
