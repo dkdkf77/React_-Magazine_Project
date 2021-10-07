@@ -1,18 +1,22 @@
 import React from 'react';
 import Text from '../elements/Text';
 import { Grid, Button, Input } from '../elements';
-import { getCookie, setCookie, deleteCookie } from '../shared/Cookie';
+import {getDispatch} from "react-redux";
+import { useDispatch } from 'react-redux';
+import {actionCreators as userActions} from "../redux/modules/user"
 
 
+// 로그인 값을 스토어에서 받아서 사용 한다 .
+// useDispatch를 사용 
+//	actionCreators 를 사용
 const Login = (props) => {
+	const dispatch = useDispatch();
 
-	console.log(getCookie('user_id'));
 	const login = () => {
-
-		setCookie("user_id", "perl", 3);
-		setCookie("user_pwd", "pppp", 3);
+		dispatch(userActions.loginAction({user_name: "perl"}));
+		
 	}
-	
+
   return (
     <React.Fragment>
       <Grid padding ="0px 16px">

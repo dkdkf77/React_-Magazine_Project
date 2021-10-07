@@ -3,22 +3,16 @@ import styled from 'styled-components';
 import { Text, Grid, Button } from '../elements/index';
 import { getCookie, deleteCookie } from '../shared/Cookie';
 
+import { useSelector, useDispatch } from 'react-redux';
+import { actionCreators as userActions} from '../redux/modules/user';
+// 리덕스 훅 , 로그아웃을 하면 딜리트 쿠키를 해주는게 아니라 로그아웃 액션을 불러 와주는게 좋을 것 같다고 한다.
+
+
 const Header = (props) => {
-	// 로그인 안한 상태 를 나타냄
-	const [is_login, setIsLogin] = React.useState(false);
+	const dispatch = useDispatch();
+	const is_login = useSelector((state) => state.user.is_login);
 	// useEffect를 사용하여 쿠키를 들고 온다 
-	React.useEffect(()=> {
 
-		let cookie = getCookie("user_id");
-		console.log(cookie);
-
-		if (cookie){
-			setIsLogin(true);
-		}else{
-			setIsLogin(false);
-		}
-	});
-	
 	//is_login의 쿠키를 확인 해주는 친구
 	if(is_login){
 		return(
@@ -32,7 +26,7 @@ const Header = (props) => {
 					<Grid is_flex>
 						<Button text="내 정보"></Button>
 						<Button text="알림"></Button>
-						<Button text="로그아웃" _onClick ={()=>{deleteCookie("user_id");}}></Button>
+						<Button text="로그아웃" _onClick ={()=>{dispatch(userActions.logOut({}));}}></Button>
 					</Grid>
 				</Grid>
 			</React.Fragment>

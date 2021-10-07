@@ -21,6 +21,18 @@ const initialState = {
   is_login: false,
 };
 
+// middleware action
+// user라는 값을 받아 오고 function 리턴 해준다.
+const loginAction = (user) => {
+  return function (dispatch, getState, {history}){
+    console.log(history);
+    dispatch(logIn(user));
+    history.push('/');
+  }
+    
+}
+
+
 //reducer => 넘겨 주는 것
 //임머가 동작하는 방법, 불변성 유지 방법
 // 자바스크립스 프롭시?를 알아야 한다는데?
@@ -36,18 +48,24 @@ export default handleActions(
         draft.user = action.payload.user;
         draft.is_login = true;
       }),
-    [LOG_OUT]: (state, action) => {},
-    [GET_USER]: (state, action) => {},
+    [LOG_OUT]: (state, action) => produce(state,(draft)=>{
+      deleteCookie("is_login");
+      draft.user = null;
+      draft.is_login = false;
+    }),
+    [GET_USER]: (state, action) => produce(state,(draft) =>{
+
+    }),
   },
   initialState
 );
 
 //action creator export=> 내보내기
-
 const actionCreators = {
   logIn,
   logOut,
   getUser,
+  loginAction
 };
 
 export { actionCreators };
