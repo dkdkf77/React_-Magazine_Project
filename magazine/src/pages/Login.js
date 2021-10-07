@@ -12,8 +12,15 @@ import {actionCreators as userActions} from "../redux/modules/user"
 const Login = (props) => {
 	const dispatch = useDispatch();
 
+  const [id, setID] = React.useState('');
+  const [pwd, setPwd] = React.useState('');
+
 	const login = () => {
-		dispatch(userActions.loginAction({user_name: "perl"}));
+    if(id === "" || pwd === ""){
+      window.alert('아이디 혹은 비밀번호가 공란입니다! 입력해주세요!')
+      return;
+    }
+		dispatch(userActions.loginFB(id, pwd));
 		
 	}
 
@@ -27,8 +34,8 @@ const Login = (props) => {
           <Input
             label="아이디"
             placeholder="아이디를 입력해 주세요."
-            _onChange={() => {
-              console.log('아이디를 입력했어요');
+            _onChange={(e) => {
+              setID(e.target.value);
             }}
           />
         </Grid>
@@ -36,8 +43,9 @@ const Login = (props) => {
           <Input
             label="패스워드"
             placeholer="패스워드를 입력해 주세요"
-            _onChange={() => {
-              console.log('패스워드를 입력했어요');
+            type="password"
+            _onChange={(e) => {
+              setPwd(e.target.value);
             }}
           />
         </Grid>

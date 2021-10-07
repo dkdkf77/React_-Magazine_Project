@@ -4,13 +4,16 @@ import { createAction, handleAction, handleActions } from 'redux-actions';
 import { produce } from 'immer';
 import { getCookie, setCookie, deleteCookie } from '../../shared/Cookie';
 
+import { auth } from '../../shared/firebase';
+
 // actions
 const LOG_IN = 'LOG_IN';
 const LOG_OUT = 'LOG_OUT';
 const GET_USER = 'GET_USER';
+const SET_USER = 'SET_USER';
 
 //action creators
-const logIn = createAction(LOG_IN, (user) => ({ user }));
+const setUser = createAction(LOG_IN, (user) => ({ user }));
 const logOut = createAction(LOG_OUT, (user) => ({ user }));
 const getUser = createAction(GET_USER, (user) => ({ user }));
 
@@ -21,17 +24,69 @@ const initialState = {
   is_login: false,
 };
 
+const user_initial = {
+  user_name: 'YG0828',
+};
+
 // middleware action
 // user라는 값을 받아 오고 function 리턴 해준다.
-const loginAction = (user) => {
-  return function (dispatch, getState, {history}){
-    console.log(history);
-    dispatch(logIn(user));
-    history.push('/');
-  }
-    
-}
 
+const loginFB = (id, pwd) => {
+  return function (dispatch, getState, { history }) {
+    auth
+      .signInWithEmailAndPassword(id, pwd)
+      .then((user) => {
+        console.log(user);
+        dispatch(
+          setUser({
+            user_name: user.user.displayName,
+            id: id,
+            user_profile: '',
+          })
+        );
+
+        history.push("/");
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+      });
+  };
+};
+
+const signupFB = (id, pwd, user_name) => {
+  return function (dispatch, getState, { history }) {
+    auth
+      .createUserWithEmailAndPassword(id, pwd)
+      .then((user) => {
+        console.log(user);
+
+        auth.currentUser
+          .updateProfile({
+            displayName: user_name,
+          })
+          .then(() => {
+            dispatch(
+              setUser({
+                user_name: user_name,
+                id: id,
+                user_profile: '',
+              })
+            );
+            history.push('/');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      })
+      .catch((error) => {
+        var errorCode = error.code;
+        var errorMessage = error.message;
+
+        console.log(errorCode, errorMessage);
+      });
+  };
+};
 
 //reducer => 넘겨 주는 것
 //임머가 동작하는 방법, 불변성 유지 방법
@@ -42,30 +97,31 @@ const loginAction = (user) => {
 // 리듀서에 이니셜스테이트도 줘야 한다.
 export default handleActions(
   {
-    [LOG_IN]: (state, action) =>
+    [SET_USER]: (state, action) =>
       produce(state, (draft) => {
         setCookie('is_login', 'success');
         draft.user = action.payload.user;
         draft.is_login = true;
       }),
-    [LOG_OUT]: (state, action) => produce(state,(draft)=>{
-      deleteCookie("is_login");
-      draft.user = null;
-      draft.is_login = false;
-    }),
-    [GET_USER]: (state, action) => produce(state,(draft) =>{
-
-    }),
+    [LOG_OUT]: (state, action) =>
+      produce(state, (draft) => {
+        deleteCookie('is_login');
+        draft.user = null;
+        draft.is_login = false;
+      }),
+    [GET_USER]: (state, action) => produce(state, (draft) => {}),
   },
   initialState
 );
 
 //action creator export=> 내보내기
 const actionCreators = {
-  logIn,
+  setUser,
   logOut,
   getUser,
-  loginAction
+  signupFB,
+  user_initial,
+  loginFB,
 };
 
 export { actionCreators };
