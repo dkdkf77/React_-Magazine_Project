@@ -49,7 +49,7 @@ const Login = (props) => {
           />
         </Grid>
         <Button
-          text="로그인 하기"
+          text="로그인"
           _onClick={() => {
             console.log('로그인 완료');
 						login();

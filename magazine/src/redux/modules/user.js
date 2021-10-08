@@ -8,13 +8,12 @@ import { auth } from '../../shared/firebase';
 import firebase from 'firebase/app';
 
 // actions
-const LOG_IN = 'LOG_IN';
 const LOG_OUT = 'LOG_OUT';
 const GET_USER = 'GET_USER';
 const SET_USER = 'SET_USER';
 
 //action creators
-const setUser = createAction(LOG_IN, (user) => ({ user }));
+const setUser = createAction(SET_USER, (user) => ({ user }));
 const logOut = createAction(LOG_OUT, (user) => ({ user }));
 const getUser = createAction(GET_USER, (user) => ({ user }));
 
@@ -25,16 +24,12 @@ const initialState = {
   is_login: false,
 };
 
-const user_initial = {
-  user_name: 'YG0828',
-};
-
 // middleware action
 // user라는 값을 받아 오고 function 리턴 해준다.
 
 const loginFB = (id, pwd) => {
   return function (dispatch, getState, { history }) {
-    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(() => {
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then((res) => {
       auth
         .signInWithEmailAndPassword(id, pwd)
         .then((user) => {
@@ -53,10 +48,14 @@ const loginFB = (id, pwd) => {
         .catch((error) => {
           var errorCode = error.code;
           var errorMessage = error.message;
+
+          console.log(errorCode, errorMessage);
         });
     });
   };
 };
+
+
 
 const signupFB = (id, pwd, user_name) => {
   return function (dispatch, getState, { history }) {
@@ -149,11 +148,9 @@ export default handleActions(
 
 //action creator export=> 내보내기
 const actionCreators = {
-  setUser,
   logOut,
   getUser,
   signupFB,
-  user_initial,
   loginFB,
   loginCheckFB,
   logoutFB,
