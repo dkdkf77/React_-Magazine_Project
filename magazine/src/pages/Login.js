@@ -21,7 +21,6 @@ const Login = (props) => {
       return;
     }
 		dispatch(userActions.loginFB(id, pwd));
-		
 	}
 
   return (

@@ -23,7 +23,7 @@ const Post = (props) => {
           <Text>{props.contents}</Text>
         </Grid>
         <Grid>
-          <Image shape ="rectangle" src ={props.src} />
+          <Image  shape ="rectangle" src ={props.src} />
         </Grid>
         <Grid padding = "16px">
           <Text bold>좋아요 {props.like_btn}개</Text>

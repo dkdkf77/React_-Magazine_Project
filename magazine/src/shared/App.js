@@ -11,7 +11,25 @@ import Header from '../components/Header';
 import { Grid } from '../elements/index';
 import Signup from '../pages/Signup';
 
+import {actionCreators as userActions} from "../redux/modules/user"
+import {useDispatch} from "react-redux"; 
+import {apiKey} from "./firebase"
+
+
 function App() {
+  const dispatch = useDispatch();
+  const _session_key = `firebase:authUser:${apiKey}:[DEFAULT]`;
+  //is_login의 쿠키를 확인 해주는 친구
+	const is_session = sessionStorage.getItem(_session_key)? true : false;
+
+  React.useEffect(() =>{
+    
+    if(is_session){
+      dispatch(userActions.loginCheckFB())
+    }
+
+  }, []);
+
   return (
     <React.Fragment>
       <Grid>

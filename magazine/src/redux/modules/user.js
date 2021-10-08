@@ -5,6 +5,7 @@ import { produce } from 'immer';
 import { getCookie, setCookie, deleteCookie } from '../../shared/Cookie';
 
 import { auth } from '../../shared/firebase';
+import firebase from 'firebase/app';
 
 // actions
 const LOG_IN = 'LOG_IN';
@@ -33,24 +34,27 @@ const user_initial = {
 
 const loginFB = (id, pwd) => {
   return function (dispatch, getState, { history }) {
-    auth
-      .signInWithEmailAndPassword(id, pwd)
-      .then((user) => {
-        console.log(user);
-        dispatch(
-          setUser({
-            user_name: user.user.displayName,
-            id: id,
-            user_profile: '',
-          })
-        );
+    auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(() => {
+      auth
+        .signInWithEmailAndPassword(id, pwd)
+        .then((user) => {
+          console.log(user);
+          dispatch(
+            setUser({
+              user_name: user.user.displayName,
+              id: id,
+              user_profile: '',
+              uid: user.user.uid,
+            })
+          );
 
-        history.push("/");
-      })
-      .catch((error) => {
-        var errorCode = error.code;
-        var errorMessage = error.message;
-      });
+          history.push('/');
+        })
+        .catch((error) => {
+          var errorCode = error.code;
+          var errorMessage = error.message;
+        });
+    });
   };
 };
 
@@ -71,6 +75,7 @@ const signupFB = (id, pwd, user_name) => {
                 user_name: user_name,
                 id: id,
                 user_profile: '',
+                uid: user.user.uid,
               })
             );
             history.push('/');
@@ -87,6 +92,34 @@ const signupFB = (id, pwd, user_name) => {
       });
   };
 };
+
+const loginCheckFB = () => {
+  return function (dispatch, getState, { history }) {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        dispatch(
+          setUser({
+            user_name: user.displayName,
+            user_profile: '',
+            id : user.email,
+            uid: user.uid,
+          })
+        );
+      }else{
+        dispatch(logOut());
+      }
+    });
+  };
+};
+
+const logoutFB = () => {
+  return function (dispatch, getState, {history}) {
+    auth.signOut().then(()=> {
+      dispatch(logOut());
+      history.replace('/');
+    })
+  }
+}
 
 //reducer => 넘겨 주는 것
 //임머가 동작하는 방법, 불변성 유지 방법
@@ -122,6 +155,8 @@ const actionCreators = {
   signupFB,
   user_initial,
   loginFB,
+  loginCheckFB,
+  logoutFB,
 };
 
 export { actionCreators };
