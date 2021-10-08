@@ -4,6 +4,7 @@ import { Grid, Button, Input } from '../elements';
 import {getDispatch} from "react-redux";
 import { useDispatch } from 'react-redux';
 import {actionCreators as userActions} from "../redux/modules/user"
+import emailCheck from "../shared/common"
 
 
 // 로그인 값을 스토어에서 받아서 사용 한다 .
@@ -16,8 +17,17 @@ const Login = (props) => {
   const [pwd, setPwd] = React.useState('');
 
 	const login = () => {
+
+    console.log(id);
+
+
     if(id === "" || pwd === ""){
-      window.alert('아이디 혹은 비밀번호가 공란입니다! 입력해주세요!')
+      // window.alert('아이디 혹은 비밀번호가 공란입니다! 입력해주세요!')
+      return;
+    }
+
+    if(!emailCheck(id)){
+      window.alert("이메일 형식이 맞지 않습니다.");
       return;
     }
 		dispatch(userActions.loginFB(id, pwd));

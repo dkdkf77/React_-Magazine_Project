@@ -2,12 +2,12 @@ import React from "react"
 import styled from "styled-components"
 
 const Button = (props) => {
-	const {text, _onClick, is_float, width} = props;
+	const {text, _onClick, is_float, children} = props;
 
 	if(is_float){
 		return(
 			<React.Fragment>
-				<FloatButton width = {width} onClick={_onClick}>{text}</FloatButton>
+				<FloatButton  onClick={_onClick}>{text? text : children}</FloatButton>
 			</React.Fragment>
 		)
 	}
@@ -16,16 +16,18 @@ const Button = (props) => {
 
 	return (
 		<React.Fragment>
-			<ElButton onClick = {_onClick}>{text}</ElButton>
+			<ElButton onClick = {_onClick}>{text? text: children}</ElButton>
 		</React.Fragment>
 	)
 }
 
 Button.defaultProps = {
-	text : "택스트",
+	text : false,
+	children : null,
 	_onClick : () => {},
 	is_float : false,
-	width: "0px",
+	margin : false,
+	width : "100px",
 }
 
 const ElButton = styled.button`
@@ -51,7 +53,7 @@ const FloatButton = styled.button`
 	bottom: 50px;
 	right: 16px;
 	text-align: center;
-	border: none;
+	border: 6px dashed white;
 	border-radius : 50px;
 	align-items: center;
 	justify-content: center;

@@ -11,6 +11,8 @@ import Header from '../components/Header';
 import { Grid, Button } from '../elements/index';
 import Signup from '../pages/Signup';
 import Permit from './Permit';
+import PostWrite from "../pages/PostWrite"
+import PostDetail from '../pages/PostDetail';
 
 
 import {actionCreators as userActions} from "../redux/modules/user"
@@ -40,10 +42,12 @@ function App() {
           <Route path="/" exact component={PostList} />
           <Route path="/login" exact component={Login} />
           <Route path="/signup" exact component={Signup}/>
+          <Route path ="/write" exact component={PostWrite}/>
+          <Route path = "/post/:id" exact component={PostDetail}/>
         </ConnectedRouter>
       </Grid>
       <Permit>
-        <Button is_float text="+"></Button>
+        <Button is_float text="⚓️"></Button>
       </Permit>
     </React.Fragment>
   );

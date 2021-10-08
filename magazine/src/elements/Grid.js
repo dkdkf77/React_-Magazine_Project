@@ -30,9 +30,9 @@ Grid.defaultProps = {
 
 // 1. width : ${(props) => props.width} 프롭스에서 설정된 값 가져오기
 const GridBox = styled.div`
-  width : ${(props) => props.widht};
+  width : ${(props) => props.width};
   height : 100%
-  box-sizing : boarder-box;
+  box-sizing : border-box;
   ${(props) => (props.padding ? `padding : ${props.padding}` : '')};
   ${(props) => (props.margin ? ` margin : ${props.margin}` : '')};
   ${(props) => (props.bg ? ` background-color :${props.bg}` : '')};
